@@ -36,6 +36,7 @@ export default function SignInForm() {
       identifier: data.identifier,
       password: data.password,
     });
+    // console.log(data);
 
     if (result?.error) {
       if (result.error === 'CredentialsSignin') {
@@ -54,7 +55,7 @@ export default function SignInForm() {
     }
 
     if (result?.url) {
-      router.replace('/dashboard');
+      router.replace('/Dashboard');
     }
   };
 

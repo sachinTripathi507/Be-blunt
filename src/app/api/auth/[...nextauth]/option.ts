@@ -17,14 +17,16 @@ export const authOptions: NextAuthOptions= {
                 async authorize(credentials: any ):Promise<any>{
                     await dbConnect()
                     try{
-                       const user= await UserModel.findOne({
-                            $or:[
-                                {email:credentials.Email},
-                                {password:credentials.password}
-                            ]
-                        })
+                        const user = await UserModel.findOne({ 
+                            $or: [
+                                { email: credentials.identifier },
+                                { username: credentials.identifier },
+                              ],
+                             });
                         if(!user){
-                            throw new Error("User not found")
+                            console.log(credentials.Email)
+                            throw new Error("user not found")
+                            // return user;
                         }
                         if(!user.isVerified){
                             throw new Error("User not verified")

@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const { username, content } = await request.json();
 
     try {
-        const user = await UserModel.findOne({ username });
+        const user = await UserModel.findOne({ username:username });
 
         if (!user) {
             return Response.json({
@@ -26,6 +26,7 @@ export async function POST(request: Request) {
         }
         const newMessage = { content, createdAt: new Date() };
         user.messages.push(newMessage as Message);
+        user.save();
         return Response.json({
             success: true,
             message: "Message sent successfully",
