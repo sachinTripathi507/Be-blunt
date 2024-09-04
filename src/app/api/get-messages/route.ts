@@ -30,16 +30,17 @@ export async function GET(request: Request) {
             { $group: { _id: '$_id', messages: { $push: '$messages' } } }
         ]).exec();
 
-        // const user = await UserModel.findOne({ _id: userId })
+        const user1 = await UserModel.findOne({ _id: userId })
         // console.log(user);
 
-
-        if (!user || user.length==0) {
+        if(!user) return Response.json({message:'user not found'},{status:404});
+        if (user1 && user.length==0) {
             return Response.json(
-                { message: 'User not found', success: false },
-                { status: 404 }
+                { message: 'No messages to show', success: false },
+                { status: 200 }
             );
         }
+
         return Response.json({
             // success: true,
             messages: user[0].messages

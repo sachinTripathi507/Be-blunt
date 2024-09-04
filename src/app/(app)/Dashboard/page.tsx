@@ -15,12 +15,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { isAcceptingMessageSchema } from '@/schemas/acceptMessageSchema';
 
+
 const Dashboard = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
   const { toast } = useToast();
   const { data: session } = useSession();
+ 
 
   const form = useForm({
     resolver: zodResolver(isAcceptingMessageSchema),
@@ -92,6 +94,7 @@ const Dashboard = () => {
       description: 'Profile URL copied to clipboard',
       });
 
+
   }
 
   const handleSwitchChange = async () => {
@@ -123,8 +126,27 @@ const Dashboard = () => {
   const baseUrl= `${window.location.protocol}//${window.location.host}`;
   const profileUrl= `${baseUrl}/u/${username}`;
 
-  const handleDeleteMessage = (messageId: string) => {
+  const handleDeleteMessage = async (messageId : string) => {
+   try {
+    const response= await axios.delete(`/api/delete-message/${messageId}`);
+    // console.log(response)
     setMessages(messages.filter((message) => message._id !== messageId));
+    if(response.status== 200){
+    toast({
+      title: 'success',
+      description:
+       'Message deleted',
+      variant: 'default',
+    });
+    }
+   } catch (error) {
+    toast({
+      title: 'Error',
+      description:
+        'Failed to delete message',
+      variant: 'destructive',
+    });
+   }
   };
 
 
@@ -177,7 +199,7 @@ const Dashboard = () => {
         {messages.length > 0 ? (
           messages.map((message, index) => (
             <MessageCard
-              key={message?._id}     //// find reason//
+              key={message?._id as string}     //// find reason//
               message={message}
               onMessageDelete={handleDeleteMessage}
             />

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
                 success: false,
                 message: "User is not accepting message"
             },
-                { status: 403 })
+                { status: 201 })
         }
         const newMessage = { content, createdAt: new Date() };
         user.messages.push(newMessage as Message);
